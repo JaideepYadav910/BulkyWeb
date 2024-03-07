@@ -1,9 +1,11 @@
 ﻿using Bulky.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -12,14 +14,53 @@ namespace Bulky.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Category>().HasData(
                     new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
                     new Category { Id = 2, Name = "SciFi", DisplayOrder = 2 },
                     new Category { Id = 3, Name = "History", DisplayOrder = 3 }
                 );
+
+            modelBuilder.Entity<Company>().HasData(
+                 new Company
+                 {
+                     Id = 1,
+                     Name = "Tech Solution",
+                     StreetAddress = "123 Tech St",
+                     City = "Tech City",
+                     State = "IL",
+                     PostalCode = "12121",
+                     PhoneNumber = "234325"
+                 },
+                 new Company
+                 {
+                     Id = 2,
+                     Name = "Vivid Books",
+                     StreetAddress = "999 Vid St",
+                     City = "Vid City",
+                     State = "IL",
+                     PostalCode = "66666",
+                     PhoneNumber = "345345"
+                 },
+                 new Company
+                 {
+                     Id = 3,
+                     Name = "Readers Club",
+                     StreetAddress = "999 Main St",
+                     City = "Lala land",
+                     State = "NY",
+                     PostalCode = "99999",
+                     PhoneNumber = "43546457"
+                 }
+                 );
+
+
 
             modelBuilder.Entity<Product>().HasData(
                     new Product
@@ -34,7 +75,7 @@ namespace Bulky.DataAccess.Data
                         Price50 = 85,
                         Price100 = 80,
                         CategoryId = 1,
-                        ImageUrl=""
+                        ImageUrl = ""
                     },
                 new Product
                 {
